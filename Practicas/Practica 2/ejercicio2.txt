@@ -1,0 +1,151 @@
+Suponga que trabaja en el área de sistemas de la Facultad de Informática y se le solicitó la automatización del pago de
+carreras de posgrado. Inicialmente se coordinó una reunión con el director del posgrado y se obtuvo la siguiente
+información:
+Ya que no se desea seguir cobrando el dinero en la secretaría, es necesario que los alumnos puedan pagar las carreras vía
+web. Como el director de posgrado no realiza tareas administrativas nos recomendó hablar con el secretario académico.
+De la entrevista con el secretario académico se obtuvo la siguiente información:
+Es necesario cargar las carreras a un sistema. En esta primera versión del sistema sólo se nos pidió esta funcionalidad, 
+sin la modificación ni eliminación. De cada carrera se conoce: nombre de la carrera (no puede repetirse), duración en años
+(a partir de la consulta del estatuto de posgrado se obtuvo que como máximo son 5 años), costo y cantidad máxima de cuotas
+para el pago. La carga de las carreras no la realiza el secretario académico sino un empleado administrativo.
+Al preguntarle por la dinámica del sistema, el secretario académico nos derivó con el jefe del área administrativa, con el
+cual hicimos otra entrevista y pudimos obtener la siguiente información:
+El requerimiento fue que el alumno ingrese a la web de posgrado y pueda registrarse ingresando: nombre, apellido,
+nombre de usuario (único) y contraseña (más de 6 dígitos). Cualquier alumno previamente registrado, puede iniciar sesión 
+con su nombre de usuario y contraseña, habilitándose la inscripción a alguna de las carreras. Para ejemplificar esta
+funcionalidad nos otorgaron acceso al sistema SIGEF, el cual realiza funcionalidades similares para las carreras de grado.
+Para inscribirse, el alumno deberá seleccionar la carrera, ingresar la cantidad de cuotas a pagar, ingresar el número de
+tarjeta y, en caso de que la tarjeta sea válida y tenga fondos, se hará efectivo el cobro y la inscripción. La tarjeta de 
+crédito se valida a través de un servicio del banco con el cual la universidad tiene convenio. Luego de efectuado el cobro,
+el sistema debe imprimir dos comprobantes, uno de inscripción y otro de pago. La única forma que tiene el alumno de pagar
+es con tarjeta de crédito.
+
+Rol de usuarios:
+- empleado administrativo
+- alumno 
+
+Historias de usuario:
+- cargar carrera
+- registrarse 
+- iniciar sesion 
+- cerrar sesion 
+- inscripcion a una carrera
+- pagar carrera
+
+
+Historia de usuario 1:
+id: cargar carrera 
+titulo: como empleado administrativo quiero cargar carreras al sistema para automatizar el pago de las mismas
+reglas de negocio:
+    - Los nombres de las carreras no pueden repetirse 
+    - La carreras no pueden durar mas de 5 años 
+
+Criterios de aceptacion:
+
+    Escenario 1: carga exitosa
+    Dado un empleado administrativo que quiere cargar una carrera en el sistema 
+    Cuando el empleado ingresa el nombre "Lic. en sistemas", duracion "5 años", costo "$50000", cantidad maxima de cuotas para el pago "12" y presiona cargar 
+    Entonces el sistema carga la carrera e informa que la carrera ha sido cargada con exito 
+
+    Escenario 2: carga fallida por nombre repetido 
+    Dado un empleado administrativo que quiere cargar una carrera que ya se encuentra cargada en el sistema
+    Cuando el empleado ingresa el nombre "Lic. en sistemas", duracion "5 años", costo "$50000", cantidad maxima de cuotas para el pago "12" y presiona cargar 
+    Entonces el sistema informa que la carrera ya se encuentra cargada 
+
+    Escenario 3: carga fallida por duracion 
+    Dado un empleado administrativo que quiere cargar una carrera que excede los 5 años
+    Cuando el empleado ingresa el nombre "Lic. en sistemas", duracion "6 años", costo "$50000", cantidad maxima de cuotas para el pago "12" y presiona cargar 
+    Entonces el sistema informa que la carrera excede el limite de duracion 
+
+
+Historia de usuario 2:
+id: registrarse 
+titulo: como alumno de la facultad quiero registrarme en el sistema para poder inscribirme a las carreras
+reglas de negocio:
+    - El nombre de usuario debe ser unico
+    - La contraseña debe tener mas de 6 digitos
+
+Criterios de aceptacion:
+
+    Escenario 1: registro exitoso
+    Dado un alumno que quiere registrarse en la web 
+    Cuando ingresa nombre "Fermin", apellido "Prida", nombre de usuario "Fer9", contraseña "123456" y presiona registrarse 
+    Entonces el sistema registra al alumno en el sistema e informa que se ha registrado con exito 
+
+    Escenario 2: registro fallido por nombre de usuario repetido 
+    Dado un alumno que quiere registrarse en la web usando un nombre existente
+    Cuando ingresa nombre "Fermin", apellido "Prida", nombre de usuario "Fer9", contraseña "123456" y presiona registrarse 
+    Entonces el sistema informa que el nombre de usuario ya existe y le pide ingresar uno distinto
+
+    Escenario 3: registro fallido por contraseña invalida
+    Dado un alumno que quiere registrarse en la web usando una contraseña de menos de 6 digitos
+    Cuando ingresa nombre "Fermin", apellido "Prida", nombre de usuario "Fer9", contraseña "12345" y presiona registrarse 
+    Entonces el sistema informa que la contraseña debe tener mas de 6 digitos y le pide que ingrese una nueva 
+
+
+Historia de usuario 3:
+id: Iniciar sesion
+titulo: Como usuario ya registrado quiero iniciar sesion para poder hacer uso de la web 
+reglas de negocio:
+
+Criterios de aceptacion:
+
+    Escenario 1: Inicio de sesion exitoso 
+    Dado un usuario ya registrado en el sistema 
+    Cuando ingresa nombre de usuario "Fer9", contraseña "123456" y presiona iniciar sesion 
+    Entonces el sistema inicia sesion en el usuario ingresado con el rol de alumno
+
+    Escenario 2: Inicio de sesion fallido 
+    Dado un nombre de usuario y contraseña los cuales no pertenecen a una cuenta registrada en el sistema
+    Cuando la persona ingresa nombre de usuario "Fer9", contraseña "123456" y presiona iniciar sesion 
+    Entonces el sistema informa que el usuario o contraseña son incorrectos
+
+
+Historia de usuario 4:
+id: cerrar sesion 
+titulo: Como usuario el cual ya ha iniciado sesion anteriormente quiero cerrar sesion para salir de mi cuenta 
+reglas de negocio:
+
+Criterios de aceptacion:
+
+    Escenario 1: cierre de sesion exitoso
+    Dado un usuario el cual posee la sesion iniciada en el sistema 
+    Cuando presione cerrar sesion 
+    El sistema cierra la sesion del usuario y lo redirige a la seccion de inicio de sesion 
+
+
+Historia de usuario 5: 
+id: inscripcion a carrera
+titulo: Como alumno de la facultad quiero inscribirme a una carrera para poder cursarla 
+reglas de negocio:
+
+Criterios de aceptacion:
+
+    Escenario 1: inscripcion exitosa
+    Dado un alumno que inicio sesion en el sistema y desea anotarse a una carrera
+    Cuando selecciona la carrera "Sistemas", la cantidad de cuotas a pagar "6", el numero de tarjeta "123", y presiona inscribirse
+    Entonces el sistema redirige al usuario a la seccion de pago y espera respuesta
+
+
+Historia de usuario 6:
+id: pagar carrera
+titulo: Como alumno quiero pagar la carrera para poder cursarla 
+reglas de negocio:
+    - El numero de tarjeta debe pertenecer a una tarjeta existente 
+
+Criterios de aceptacion:
+
+    Escenario 1: pago exitoso 
+    Dado que el numero de la tarjeta pertenece a una tarjeta existente y posee saldo
+    Cuando la persona presiona confirmar pago 
+    Entonces el sistema inscribe al alumno en la carrera e imprime dos comprobantes, uno de inscripción y otro de pago
+
+    Escenario 2: pago fallido por numero invalido 
+    Dado que el numero de la tarjeta no pertenece a una tarjeta existente
+    Cuando la persona presiona confirmar pago 
+    Entonces el sistema informa error por numero de tarjeta invalido
+
+    Escenario 3: pago fallido por saldo insuficiente 
+    Dado que el saldo de la tarjeta es insuficiente para efectuar el pago
+    Cuando la persona presiona confirmar pago 
+    Entonces el sistema informa error por saldo insuficiente
