@@ -1,0 +1,98 @@
+Se desea modelar un sistema para el manejo de venta de bebidas alcohólicas en linea. Para poder empezar a comprar en el
+sitio, es necesario que las personas se registren ingresando nombre, apellido, mail (será utilizado como nombre de usuario
+por lo tanto debe ser único) y edad. Solo se permite que se registren al sitio personas mayores a 18 años, de lo contrario el
+sistema debe mostrar en pantalla el texto de la ley que impide la venta de bebidas alcohólicas a menores. Si el registro es
+exitoso el sistema genera una contraseña que es enviada al mail ingresado en el registro.
+Para comprar el usuario debe iniciar sesión y una vez logueado el sistema muestra una lista de bebidas, una vez que el
+usuario selecciona todos los productos que desea comprar, si el usuario es premium se le hace un descuento del 20% y se
+informa en pantalla el total menos el 20%. Ademas si el usuario seleccionó productos por un monto superior a los $4500
+se le hace un 10% de descuento y se informa en pantalla el total menos el 10%. Tenga en cuenta que si el usuario es
+premium y compra por un monto superior a $4500 se deben aplicar ambos descuentos.
+
+Roles de usuario:
+- Cliente 
+
+Historias de usuario:
+- Registrar usuario
+- Iniciar sesion
+- Cerrar sesion
+- Comprar productos 
+
+Historia de usuario 1:
+id: Registrar usuario
+titulo: como cliente quiero registrarme para poder comprar productos en la web
+reglas de negocio:
+- ley que impide la venta de bebidas alcoholicas a menores 
+
+Criterios de aceptacion:
+
+Escenario 1: registro exitoso 
+dado un usuario con mail unico mayor a 18 años que quiere registrarse en la web 
+cuando ingresa el nombre "Fermin", apellido "Prida", mail "ferminprida97@gmail.com", edad 20 y presiona registrarse 
+entonces el sistema registra al usuario, envia la contraseña generada al mail ingresado e informa que el usuario ha sido registado con exito 
+
+Escenario 2: registro fallido porque el usuario es menor de edad
+dado un usuario con mail unico menor a 18 años que quiere registrarse en la web 
+cuando ingresa el nombre "Fermin", apellido "Prida", mail "ferminprida97@gmail.com", edad 15 y presiona registrarse 
+entonces el sistema muestra en pantalla el texto de la ley que impide la venta de bebidas alcohólicas a menores
+
+
+Historia de usuario 2:
+id: Iniciar sesion
+titulo: como usuario registrado quiero iniciar sesion para poder comprar en la web
+reglas de negocio:
+
+Criterios de aceptacion:
+
+Escenario 1: Inicio de sesion exitoso 
+dado un usuario "ferminprida97@gmail.com" y contraseña "hola123" que pertenecen a un usuario registrado en el sistema
+cuando ingresa nombre de usuario "ferminprida97@gmail.com", contraseña "hola123" y presiona iniciar sesion 
+entonces el sistema inicia la sesion del usuario y muestra la lista de bebidas en la seccion principal de la web 
+
+Escenario 2: Inicio de sesion fallido 
+dado un usuario "pepe" y contraseña "chau" que no pertenecen a un usuario registrado en el sistema
+cuando ingresa nombre de usuario "pepe", contraseña "chau" y presiona iniciar sesion 
+entonces el sistema informa que el nombre o contraseña son incorrectos
+
+
+Historia de usuario 3:
+id: cerrar sesion
+titulo: como usuario quiero cerrar sesion para salir de mi cuenta 
+reglas de negocio:
+
+Criterios de aceptacion:
+
+Escenario 1: cierre de sesion exitoso 
+dado un usuario "fermin" con sesion iniciada en la web 
+cuando el usuario presione "cerrar sesion" 
+entonces el sistema cierra la sesion del usuario y lo regirige a la pagina del login/sigin 
+
+
+Historia de usuario 4:
+id: comprar productos 
+titulo: como usuario quiero seleccionar productos para poder realizar una compra 
+reglas de negocio:
+- si el usuario es premium se le hace un descuento del 20% 
+- si el usuario seleccionó productos por un monto superior a los $4500 se le hace un 10% de descuento
+
+Criterios de aceptacion:
+
+Escenario 1: compra usuario premium
+dado un usuario premium "fermin" que realiza una compra de monto menor a $4500
+cuando el usuario selecciona los productos y presiona "comprar"
+entonces el sistema aplica el 20% de descuento al total de la compra e informa en pantalla el monto con el descuento aplicado
+
+Escenario 2: compra minorista usuario comun
+dado un usuario comun "felipe" que realiza una compra de monto menor a $4500
+cuando el usuario selecciona los productos y presiona "comprar"
+entonces el sistema calcula el total de la compra e informa el monto 
+
+Escenario 3: compra mayorista usuario comun
+dado un usuario comun "felipe" que realiza una compra de monto mayor a $4500
+cuando el usuario selecciona los productos y presiona "comprar"
+entonces el sistema aplica el 10% de descuento al total de la compra e informa en pantalla el monto con el descuento aplicado 
+
+Escenario 4: compra mayorista usuario premium
+dado un usuario premium "fermin" que realiza una compra de monto mayor a $4500
+cuando el usuario selecciona los productos y presiona "comprar"
+entonces el sistema aplica el 30% de descuento al total de la compra e informa en pantalla el monto con el descuento aplicado
