@@ -1,0 +1,231 @@
+Suponga que trabaja en el área de sistemas de la Facultad de Informática y se le solicitó la automatización
+del pago de carreras de posgrado. Inicialmente se coordinó una reunión con el director del posgrado y se
+obtuvo la siguiente información:
+
+Ya que no se desea seguir cobrando el dinero en la secretaría, es necesario que los alumnos puedan pagar
+las carreras vía web. Como el director de posgrado no realiza tareas administrativas nos recomendó hablar
+con el secretario académico.
+
+De la entrevista con el secretario académico se obtuvo la siguiente información:
+Es necesario cargar las carreras a un sistema. En esta primera versión del sistema sólo se nos pidió esta
+funcionalidad, sin la modificación ni eliminación. De cada carrera se conoce: nombre de la carrera (no
+puede repetirse), duración en años (a partir de la consulta del estatuto de posgrado se obtuvo que como
+máximo son 5 años), costo y cantidad máxima de cuotas para el pago. La carga de las carreras no la realiza
+el secretario académico sino un empleado administrativo.
+
+Al preguntarle por la dinámica del sistema, el secretario académico nos derivó con el jefe del área
+administrativa, con el cual hicimos otra entrevista y pudimos obtener la siguiente información:
+El requerimiento fue que el alumno ingrese a la web de posgrado y pueda registrarse ingresando: nombre,
+apellido, nombre de usuario (único) y contraseña (más de 6 dígitos). Cualquier alumno previamente
+registrado, puede iniciar sesión con su nombre de usuario y contraseña, habilitándose la inscripción a
+alguna de las carreras. Para ejemplificar esta funcionalidad nos otorgaron acceso al sistema SIGEF, el cual
+realiza funcionalidades similares para las carreras de grado.
+
+Para inscribirse, el alumno deberá seleccionar la carrera, ingresar la cantidad de cuotas a pagar, ingresar el
+número de tarjeta y, en caso de que la tarjeta sea válida y tenga fondos, se hará efectivo el cobro y la
+inscripción. La tarjeta de crédito se valida a través de un servicio del banco con el cual la universidad tiene
+convenio. Luego de efectuado el cobro, el sistema debe imprimir dos comprobantes, uno de inscripción y
+otro de pago. La única forma que tiene el alumno de pagar es con tarjeta de crédito.
+
+Actores:
+Empleado administrativo 
+Alumno 
+Servidor externo 
+ 
+Casos de uso:
+Cargar carrera 
+Resgistrar usuario 
+Iniciar sesion 
+Cerrar sesion 
+Inscribirse 
+Pagar con tarjeta 
+
+Nombre del caso de uso: cargar carrera
+
+Descripcion: este caso de uso describe el evento en el que un empleado administrativo carga una carrera en la web 
+
+Actores: 
+Empleado administrativo 
+
+Preconcidiciones:
+
+Curso normal:
+
+    Accion del actor:
+    Paso 1: el empleado administrativo selecciona la opcion "cargar carrera"
+    Paso 3: el empleado administrativo ingresa los datos y los confirma 
+
+    Accion del sistema:
+    Paso 2: el sistema le solicita que ingrese nombre de la carrera, duración en años, 
+    costo y cantidad máxima de cuotas para el pago  
+    Paso 4: el sistema verifica que el nombre de la carrera no se repita
+    Paso 5: el sistema verifica que la duracion de la carrera no sea mayor a 5 años
+    Paso 6: el sistema registra la nueva carrera y lo informa en pantalla 
+
+Curso alterno:
+
+    Paso alternativo 4: el nombre de la carrera ya existe. Se notifica al usuario. Retoma desde el paso 2
+    Paso alternativo 5: la duracion de la carrera es mayor a 5 años. Se notifica al usuario. Retoma desde el paso 2 
+
+Postcondicion:
+La carrera se cargo con exito 
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+Nombre del caso de uso: Registrar usuario 
+
+Descripcion: este caso de uso describe el evento en el que un alumno no registrado se registra en el sistema 
+
+Actores:
+Alumno no registrado 
+
+Precondiciones:
+
+Curso normal:
+
+    Accion del actor:
+    Paso 1: el alumno no registrado selecciona la opcion "registrarse"
+    Paso 3: el alumno no registrado ingresa los datos y los confirma 
+
+    Accion del sistema:
+    Paso 2: el sistema le solicita ingresar nombre, apellido, nombre de usuario y 
+    contraseña
+    Paso 4: el sistema verifica que el nombre de usuario sea unico 
+    Paso 5: el sistema verifica que la contraseña tenga mas de 6 digitos 
+    Paso 6: el sistema registra al nuevo usuario 
+
+Curso alternativo:
+    Paso alternativo 4: el nombre de usuario ingresado ya existe. Se notifica al usuario. Se retoma desde el paso 2 
+    Paso alternativo 5: la contraseña tiene menos de 6 digitos. Se notifica al usuario. Se retoma desde el paso 2 
+
+Postcondicion:
+Se creo una cuenta de usuario nueva
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+Nombre del caso de uso: Iniciar sesion 
+
+Descripcion: este caso de uso describe el evento en el que un alumno registrado inicia sesion 
+
+Actores:
+Alumno registrado 
+
+Precondiciones:
+
+Curso normal:
+
+    Accion del actor:
+    Paso 1: el alumno registrado selecciona la opcion "iniciar sesion"
+    Paso 3: el alumno registrado ingresa el nombre de usuario y contraseña
+
+    Accion del sistema:
+    Paso 2: el sistema solicita nombre de usuario y contraseña
+    Paso 4: el sistema verifica los datos ingresados 
+    Paso 5: el sistema registra la sesion iniciada y habilita las acciones de alumno registrado 
+
+Curso alterno:
+
+    Paso alternativo 4: el nombre de usuario o contraseña no son validos. Se notifica al usuario. Se 
+    retoma desde el paso 2 
+
+Postcondicion:
+La sesion ha sido iniciada y las opciones para alumno registrado aparecen habilitadas 
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+Nombre del caso de uso: Cerrar sesion 
+
+Descripcion: este caso de uso describe el evento en el que un alumno registrado cierra sesion 
+
+Actores:
+Alumno registrado 
+
+Precondiciones:
+El alumno registrado debe tener una sesion iniciada 
+
+Curso normal:
+
+    Accion del actor:
+    Paso 1: el alumno registrado selecciona la opcion "cerrar sesion"
+    Paso 3: el alumno registrado confirma la operacion 
+
+    Accion del sistema:
+    Paso 2: el sistema solicita la confirmacion del alumno registrado
+    Paso 4: el sistema cierra la sesion y deshabilita las acciones de
+    alumno registrado 
+
+Curso alterno:
+    Paso alternativo 3: el alumno registrado cancela la operacion. Fin de CU 
+
+Postcondicion:
+La sesion ha sido cerrada, las opciones de alumno registrado han sido deshabilitadas y se eliminan 
+los datos de la sesion 
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+Nombre del caso de uso: Inscribirse
+
+Descripcion: este caso de uso describe el evento en el que un alumno registrado se inscribe a una carrera 
+
+Actores:
+Alumno registrado 
+
+Preconcidiciones:
+El alumno debe tener una sesion iniciada 
+
+Curso normal:
+
+    Accion del actor:
+    Paso 1: el alumno registrado selecciona una carrera y presiona "inscribirse"
+    Paso 3: el alumno registrado ingresa los datos 
+
+    Accion del sistema:
+    Paso 2: el sistema solicita la cantidad de cuotas a pagar 
+    Paso 4: el sistema ejecuta el caso de uso Pagar con tarjeta
+    Paso 5: el sistema registra la inscripcion e imprime dos comprobantes, uno de inscripción y otro de pago
+
+Curso alterno:
+    Paso alternativo 4: el pago no se realiza. Se notifica al alumno. Fin de CU
+    Paso alternativo 4.1: se produce un error al ejecutar el CU pagar con tarjeta. Se notifica el error. Fin de CU
+
+Postcondicion:
+La realizo la inscripcion del alumno a la carrera seleccionada y se imprimio el comprobante de inscripcion y 
+el de pago 
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+Nombre del caso de uso: Pagar con tarjeta 
+
+Descripcion: este caso de uso describe el cobro de una inscrpcion a una carrera mediante una tarjeta 
+
+Actores:
+Alumno registrado 
+Servidor del banco 
+
+Preconcidiciones:
+Se debe haber ejecutado el CU "Inscribirse"
+
+Curso normal:
+
+    Accion del actor:
+    Paso 2: el alumno registrado ingresa los datos
+    Paso 4: el servidor del banco acepta la conexion y solicita numero de tarjeta 
+    y codigo de seguridad
+    Paso 6: el servidor del banco valida los datos y fonodos suficientes   
+    Paso 7: el servidor del banco retorna el resultado 
+
+    Accion del sistema:
+    Paso 1: el sistema solicita numero de tarjeta y codigo de seguridad
+    Paso 3: el sistema solicita conexion con el servidor del banco 
+    Paso 5: el sistema envia los datos de la tarjeta al servidor del banco 
+    Paso 8: el sistema recibe que los datos de la tarjeta son correctos 
+    Paso 9: el sistema recibe que los fondos son suficientes 
+    Paso 10: el sistema registra el pago y cierra la conexion con el servidor del banco 
+
+Curso alterno:
+    Paso alternativo 3: falla la conexion con el servidor del banco. Se informa el error. Fin de CU 
+    Paso alternativo 8: los datos de la tarjeta son incorrectos. Se informa el error. Fin de CU 
+    Paso alternativo 9: los fondos son insuficientes. Se informa fondos insuficientes. Fin de CU 
+
+Postcondicion:
+Se efectuo y registro el pago a traves de la tarjeta 
