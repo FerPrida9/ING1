@@ -1,0 +1,201 @@
+Se desea desarrollar un sistema para la impresión de fotos para una casa fotográfica. Los clientes pueden
+subir sus fotos, pagar por internet y luego ser retiradas personalmente por el local.
+Para subir las fotos la persona debe registrarse en el sitio, ingresando sus datos personales, nombre,
+apellido, email, domicilio, nombre de usuario y contraseña.
+Una vez autenticado, el usuario puede subir un máximo de 50 fotos para ser impresas. Las fotos se ingresan
+de a una. Una vez subidas, el usuario debe abonar el monto total (el valor de cada foto es de $15). El pago
+se realiza con tarjeta de crédito, ingresando los datos de la misma (número de tarjeta, código de seguridad
+y nombre del titular), la cual debe ser validada a través del sistema del banco. Una vez que se realiza el
+pago se le otorga al cliente un código único que le servirá posteriormente para retirar las fotos.
+Un cliente debe acercarse a la sucursal para retirar las fotos enviadas previamente. Para esto debe
+presentar el código único a un empleado. Este registra el código, la fecha de retiro y entrega las fotos al
+cliente
+
+Actores:
+- Cliente
+- Cliente no registrado
+- Servidor del banco
+- Empleado 
+
+Casos de uso:
+- Subir foto 
+- Registrarse
+- Iniciar sesion 
+- Cerrar sesion 
+- Pagar con tarjeta 
+- Registrar retiro 
+
+
+Nombre del caso de uso: registrarse 
+
+Descripcion: este caso de uso describe el evento en el que un cliente no registrado registra un usuario en el sitio 
+
+Actores:
+- Cliente no registrado 
+
+Precondiciones:
+
+Curso normal:
+    Accion del actor:
+    Paso 1: el cliente no registrado selecciona la opcion "registrarse"
+    Paso 3: el cliente no registrado ingresa los datos solicitados 
+
+    Accion del sistema:
+    Paso 2: el sistema solicita ingresar nombre, apellido, email, domicilio, nombre de usuario y contraseña
+    Paso 4: el sistema verifica que no exista otro usuario con el mismo nombre de usuario 
+    Paso 5: el sistema registra el alta del nuevo usuario 
+
+Curso alterno:
+    Paso alternativo 4: ya existe el nombre de usuario ingresado. Se informa. Se retoma desde el paso 2
+
+Postcondicion:
+Se creo una cuenta de usuario nueva 
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Nombre del caso de uso: iniciar sesion 
+
+Descripcion: este caso de uso describe el evento en el que un cliente inicia sesion 
+
+Actores:
+- Cliente 
+
+Precondiciones: 
+
+Curso normal:
+    Accion del actor:
+    Paso 1: el cliente selecciona la opcion "iniciar sesion"
+    Paso 3: el cliente ingresa nombre de usuario y contraseña 
+
+    Accion del sistema:
+    Paso 2: el sistema solicita ingresar nombre de usuario y contraseña
+    Paso 4: el sistema verifica los datos ingresados 
+    Paso 5: el sistema registra la sesion iniciada y habilita las acciones del cliente 
+
+Curso alterno:
+    Paso alternativo 4: el nombre de usuario o contraseña son incorrectos. Se informa. Se retoma desde el paso 2
+
+Postcondicion:
+La sesion ha sido iniciada y las opciones para cliente aparecen habilitadas
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Nombre del caso de uso: cerrar sesion 
+
+Descripcion: este caso de uso describe el evento en el que un cliente cierra sesion 
+
+Actores:
+- Cliente 
+
+Precondiciones:
+El usuario debe tener una sesion iniciada 
+
+Curso normal:
+    Accion del actor:
+    Paso 1: el cliente selecciona la opcion "cerrar sesion"
+    Paso 3: el cliente confirma la operacion
+
+    Accion del sistema:
+    Paso 2: el sistema solicita la confirmacion del usuario
+    Paso 4: el sistema cierra la sesion y deshabilita las opciones para cliente
+
+Curso alterno:
+    Paso alternativo 3: el cliente cancela la operacion. Fin de CU 
+
+Postcondicion:
+La sesion ha sido cerrada, las opciones para cliente fueron deshabilitadas y se eliminan los datos de la sesion
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Nombre del caso de uso: Subir fotos 
+
+Descripcion: este caso de uso describe el evento en el que un cliente sube fotos al sitio 
+
+Actores:
+- Cliente 
+
+Precondiciones:
+- El cliente debe tener una sesion iniciada 
+
+Curso normal:
+    Accion del actor:
+    Paso 1: el cliente selecciona la opcion "subir fotos"
+    Paso 3: el cliente ingresa las fotos 
+    Paso 6: el cliente selecciona la opcion "pagar"
+
+    Accion del sistema:
+    Paso 2: el sistema solicita ingresar las fotos de a una 
+    Paso 4: el sistema verifica que se hayan ingresado menos de 50 fotos 
+    Paso 5: el sistema calcula el monto total y lo informa en pantalla 
+    Paso 7: el sistema ejecuta el CU "Pagar con tarjeta"
+    Paso 8: el sistema otorga un codigo unico para retirar las fotos
+
+Curso alterno:
+    Paso alternativo 4: hay mas de 50 fotos ingresadas. Se informa. Retoma desde el paso 2
+    Paso alternativo 7: el pago no se realiza. Fin de CU
+
+Postcondicion:
+Se registro el pedido y se otorgo el codigo unico para el retiro
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Nombre del caso de uso: Pagar con tarjeta 
+
+Descripcion: este caso de uso describe el cobro de un pedido mediante tarjeta 
+
+Actores:
+- Servidor del banco 
+- Cliente 
+
+Precondiciones:
+Se debe haber ejecutado el CU "Subir fotos" 
+
+Curso normal:
+    Accion del actor:
+    Paso 2: el cliente ingresa los datos solicitados 
+    Paso 4: el servidor del banco acepta la conexion y solicita numero de tarjeta y codigo de seguridad
+    Paso 6: el servidor del banco verifica los datos recibidos y fondos suficientes
+    Paso 7: el servidor del banco retorna el resultado
+
+    Accion del sistema:
+    Paso 1: el sistema solicita numero de tarjeta, codigo de seguridad y nombre del titular 
+    Paso 3: el sistema solicita la conexion con el servidor del banco
+    Paso 5: el sistema envia los datos de la tarjeta al servidor del banco
+    Paso 8: el sistema recibe que los datos de la tarjeta son correctos 
+    Paso 9: el sistema recibe que los fondos son suficientes 
+    Paso 10: el sistema registra el pago y cierra la conexion con el servidor del banco 
+
+Curso alterno:
+    Paso alternativo 3: falla la conexion con el servidor del banco. Se informa el error. Fin de CU
+    Paso alternativo 8: los datos de la tarjeta son incorrectos. Se informa erro en los datos de la tarjeta. Fin de CU
+    Paso alternativo 9: los fondos de la tarjeta son insuficientes. Se informa fondos insuficientes. Fin de CU 
+
+Postcondicion:
+Se registro el pago a traves de la tarjeta
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Nombre del caso de uso: Registrar retiro 
+
+Descripcion: este caso de uso describe el evento en el que un empleado registra el retiro de un pedido 
+
+Actores:
+- Empleado 
+
+Precondiciones:
+
+Curso normal:
+    Accion del actor:
+    Paso 1: el empleado selecciona la opcion "registrar pedido"
+    Paso 3: el empleado ingresa el codigo
+
+    Accion del sistema:
+    Paso 2: el sistema solicita ingresar un codigo
+    Paso 4: el sistema verifica que el codigo pertenezca a un pedido 
+    Paso 5: el sistema registra el retiro con el codigo ingresado y la fecha actual
+
+Curso alterno:
+    Paso alternativo 4: el codigo no pertenece a ningun pedido. Se informa el error. Retoma desde el paso 2 
+
+Postcondicion:
+Se registro el retiro con el codigo ingresado y la fecha actual
