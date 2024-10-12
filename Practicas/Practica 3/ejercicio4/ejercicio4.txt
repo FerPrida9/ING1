@@ -1,0 +1,107 @@
+Se desea modelar un sistema que controle una máquina de reciclado. La máquina cuenta con un recipiente
+externo donde se depositan los materiales a reciclar (vidrio, papel, plástico o aluminio). La persona coloca
+lo que desea reciclar en el recipiente y luego presiona la opción “reciclar”. El sistema detecta el tipo de
+material y registra el peso; por último imprime un recibo con el monto total que se le debe pagar a la
+persona por lo reciclado. Si el sistema no detecta correctamente el tipo de material aborta el proceso
+retornando el producto.
+El sistema también es utilizado por un operador a través de una consola que se encuentra bajo llave. El
+operador puede solicitar un listado con los tipos de materiales reciclados en un periodo de fechas
+determinado, detallando además el total abonado por dicho material. También, el operador puede
+actualizar los montos a pagar por kilo de cada tipo de material que la máquina puede reciclar. Para esto, el
+sistema primero solicita el tipo de material a actualizar. Luego se pide el nuevo monto. Si el operador
+acepta, se actualiza el material seleccionado.
+
+Actores:
+- Persona
+- Operador 
+
+Casos de uso:
+- Reciclar 
+- Solicitar listado 
+- Actualizar monto 
+
+Nombre del caso de uso: Reciclar 
+
+Descripcion: este caso de uso describe el evento en el que una persona usa la maquina para reciclar material 
+
+Actores:
+- Persona 
+
+Preconcidiciones:
+---
+
+Curso normal:
+    Accion del actor:
+    Paso 1: la persona selecciona la opcion "reciclar"
+
+    Accion del sistema:
+    Paso 2: el sistema detecta el tipo de material 
+    Paso 3: el sistema registra el peso del material
+    Paso 4: el sistema imprime un recibo con el monto total que se le debe pagar a la persona por lo reciclado
+
+Curso alterno:
+    Paso alternativo 2: no se detecta el tipo de material. Se informa el error y se retorna el producto.
+    Fin de CU 
+
+Postcondicion:
+El material se peso y registro con exito y se imprimio el recibo 
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Nombre del caso de uso: Solicitar listado 
+
+Descripcion: este caso de uso describe el evento en el que un operador solicita un listado con los tipos 
+de materiales reciclados en un periodo de fechas 
+
+Actores:
+- Operador 
+
+Preconcidiciones:
+---
+
+Curso normal:
+    Accion del actor:
+    Paso 1: el operador selecciona la opcion "Solicitar listado" 
+    Paso 3: el operador ingresa el periodo de fechas
+
+    Accion del sistema:
+    Paso 2: el sistema solicita ingresar un periodo de fechas 
+    Paso 4: el sistema informa los tipos de materiales reciclados en ese periodo y el total abonado por cada material
+
+Curso alterno:
+---
+
+Postcondicion:
+Se informo el listado con exito 
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Nombre del caso de uso: Actualizar monto 
+
+Descripcion: este caso de uso describe el evento en el que un operador actualiza el monto a pagar por kilo de un tipo
+de material 
+
+Actores:
+- Operador 
+
+Precondiciones:
+---
+
+Curso normal:
+    Accion del actor:
+    Paso 1: el operador selecciona la opcion "actualizar monto"
+    Paso 3: el operador ingresa el tipo de material
+    Paso 5: el operador ingresa el nuevo monto 
+    Paso 7: el operador confirma la operacion 
+
+    Accion del sistema:
+    Paso 2: el sistema solicita el tipo de material a actualizar 
+    Paso 4: el sistema solicita el nuevo monto
+    Paso 6: el sistema pide la confirmacion del operador 
+    Paso 8: el sistema actualiza el monto del material y lo informa en pantalla 
+
+Curso alterno:
+    Paso alternativo 7: se cancela la operacion. Fin de CU 
+
+Postcondicion:
+Se actualizo el monto del tipo de material ingresado 
