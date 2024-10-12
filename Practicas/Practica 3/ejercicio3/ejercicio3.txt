@@ -1,0 +1,164 @@
+Suponga que trabaja en un grupo en el área de sistemas de una organización y está por comenzar un
+nuevo proyecto para desarrollar un sistema que depende del departamento contable.
+El sistema deberá administrar los contratos realizado con terceros. En una de las reuniones con el jefe de
+departamento nos dijo que él no usará el sistema pero que recibirá listados del personal contratado ya que
+deberá firmarlos para elevarlos a las autoridades.
+Para obtener más información generamos una reunión con el empleado de mesa de entradas. Nos contó
+que el problema que tienen actualmente es que realizan todas las minutas a mano por lo cual desean
+automatizar esta tarea. Las minutas son el paso previo a un contrato. Para confeccionar una minuta, el
+empleado de mesa de entradas debe ingresar nombre y número de CUIT de una persona a contratar, tipo
+de contrato, fecha de comienzo, duración y monto, a lo que el sistema le asociará un número de minuta
+automáticamente. Nos recomendó leer la reglamentación vigente acerca de contratos de la que obtuvimos
+que los montos de los mismos no pueden superar los $25.000 y que la duración debe ser como máximo de
+6 meses.
+Una vez confeccionada la minuta por parte del empleado de mesa de entradas, la misma queda pendiente
+de aprobación. El que puede aprobar una minuta es el empleado de rendiciones. Realizamos una reunión
+con él y nos contó que su tarea consiste en evaluar las minutas para determinar su aprobación. También
+nos dijo que en otro trabajo que tiene usan un sistema llamado MiMiNuTa al que nos puede dar acceso
+para ver como hacen esa tarea. Después del análisis de este sistema, se concluyó que para aprobar una
+minuta necesitaría ingresar un número de minuta y que el sistema muestre los datos de la misma para
+poder aprobarla. Nos dijo que no puede aprobar la minuta si la persona a contratar tiene 3 contratos
+vigentes (minutas aprobadas) ni tampoco si el CUIT de la persona a contratar está inhabilitado por la AFIP.
+Actualmente se comunica telefónicamente con la AFIP para realizar esta verificación, pero sabe que ésta
+provee un servicio para aplicaciones que permite hacer la verificación en línea. Esto último nos obligó a
+generar una reunión con el administrador de servidores de la AFIP. Nos dijo que para poder conectarnos
+con un servidor de la AFIP, el sistema debe mandar un token (código que identificará de manera única a
+nuestra aplicación) y CUIT, si el token es correcto, el servidor responde si el CUIT está habilitado o no.
+Por último el empleado de rendiciones será el responsable de imprimir los listados con las minutas
+aprobadas, es decir, un listado con el personal contratado para poder dárselo al jefe de departamento para
+que lo firme.
+
+Actores:
+- Empleado de mesa 
+- Empleado de rendiciones 
+- Servidor AFIP 
+
+Casos de uso:
+- confeccionar minuta 
+- aprobar minuta 
+- verificar CUIT
+- imprimir listados 
+
+Nombre del caso de uso: confeccionar minuta 
+
+Descripcion: este caso de uso describe el evento en el que un empleado de mesa confecciona una minuta 
+
+Actores:
+- Empleado de mesa 
+
+Preconcidiciones:
+
+Curso normal:
+
+    Accion del actor:
+    Paso 1: el empleado de mesa selecciona la opcion "confeccionar minuta"
+    Paso 3: el empleado de mesa ingresa los datos solicitados 
+
+    Accion del sistema:
+    Paso 2: el sistema solicita ingresar nombre y número de CUIT de la persona a contratar, tipo de contrato, fecha de comienzo, 
+    duración y monto
+    Paso 4: el sistema valida los datos ingresados 
+    Paso 5: el sistema le asocia un numero de minuta e informa que la minuta se ha confeccionado con exito 
+
+Curso alterno:
+    Paso alternativo 4: el monto del contrato supera los $25.000. Se notifica al usuario. Retoma desde el paso 2 
+    Paso alternativo 4: la duracion del contrato es de mas de 6 meses. Se notifica al usuario. Retoma desde el paso 2 
+
+Postcondicion:
+Se confecciono la minuta, se le asocio un numero y quedo pendiente de aprobacion 
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Nombre del caso de uso: aprobar minuta
+
+Descripcion: este caso de uso describe el evento en el que un empleado de rendiciones aprueba una minuta 
+
+Actores: 
+- Empleado de rendiciones 
+
+Precondiciones:
+
+Curso normal:
+    Accion del actor:
+    Paso 1: el empleado de rendiciones selecciona la opcion "aprobar minuta" 
+    Paso 3: el empleado de rendiciones ingresa el numero de minuta 
+    Paso 6: el empleado de rendiciones selecciona la opcion "aprobar"
+    Paso 8: el empleado confirma la operacion 
+
+    Accion del sistema:
+    Paso 2: el sistema solicita ingresar numero de minuta
+    Paso 4: el sistema verifica que el numero de minuta pertenezca a una minuta pendiente de aprobacion
+    Paso 5: el sistema muestra los datos de la minuta 
+    Paso 7: el sistema solicita la confirmacion del usuario
+    Paso 9: el sistema verifica que la persona a contratar no tenga 3 contratos vigentes (minutas aprobadas)
+    Paso 10: el sistema ejecuta el caso de uso "verificar CUIT"
+    Paso 11: el sistema aprueba la minuta y la agrega al listado de minutas aprobadas
+
+Curso alterno:
+    Paso alternativo 4: el numero de minuta no pertenece a una minuta pendiente de aprobacion. Se notifica al usuario. Retoma 
+    desde el paso 2 
+    Paso alternativo 9: la persona posee 3 o mas contratos vigentes. Se informa al usuario. Fin de CU
+    Paso alternativo 11: el CUIT de la persona a contratar se encuentra inhabilitado por la AFIP. Se informa al usuario. 
+    Fin de CU
+
+Postcondicion:
+Se aprobo la minuta y se agrego al listado de minutas aprobadas 
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Nombre del caso de uso: verificar CUIT 
+
+Descripcion: este caso de uso describe el evento en el que el servidor de la AFIP verifica si 
+el CUIT de la persona esta o no habilitado 
+
+Actores:
+- Servidor de la AFIP 
+
+Preconcidiciones:
+Se debe haber ejecutado el CU "Aprobar minuta"
+
+Curso normal:
+    Accion del actor:
+    Paso 2: el servidor de la AFIP acepta la conexion y solicita token y CUIT
+    Paso 4: el servidor de la AFIP verifica el token recibido
+    Paso 5: el servidor de la AFIP verifica si el CUIT recibido esta o no habilitado 
+    Paso 6: el servidor de la AFIP retorna el resultado 
+    
+    Accion del sistema:
+    Paso 1: el sistema solicita la conexion con el servidor de la AFIP
+    Paso 3: el sistema envia los datos solicitados al servidor de la AFIP
+    Paso 7: el sistema recibe el resultado 
+
+Curso alterno:
+    Paso alternativo 1: falla la conexion con el servidor de la AFIP. Se informa el error. Fin de CU
+    Paso alternativo 4: el token es invalido. Se informa token incorrecto. Fin de CU 
+
+Postcondicion:
+Se verifico el CUIT de la persona a contratar 
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Nombre del caso de uso: imprimir listados
+
+Descripcion: este caso de uso describe el evento en el que un empleado de rendiciones imprime los listados de las 
+minutas aprobadas 
+
+Actores:
+- Empleado de rendiciones 
+
+Precondiciones:
+
+Curso normal:
+    Accion del actor:
+    Paso 1: el empleado de rendiciones selecciona la opcion "imprimir listado"
+    Paso 3: el empleado de rendiciones confirma la operacion 
+
+    Accion del sistema:
+    Paso 2: el sistema muestra un listado con las minutas aprobadas y solicita confirmacion 
+    Paso 4: el sistema imprime el listado de minutas aprobadas 
+
+Curso alterno:
+    Paso alternativo 3: se cancela la operacion. Fin de CU 
+
+Postcondicion:
+Se imprimio el listado de minutas aprobadas 
