@@ -1,0 +1,171 @@
+Se necesita modelar un subsistema web de administración de préstamos personales.
+El sistema forma parte de un sistema mayor que implementa un servicio de homebanking para clientes del
+banco. Para todas las operaciones que realiza el cliente, se asume que está debidamente autenticado.
+
+Un cliente del banco puede solicitar un préstamo personal vía web. Cada cliente puede solicitar un máximo
+de 3 préstamos y hasta un monto total de $30.000. Para realizar la solicitud, el cliente ingresa el motivo,
+selecciona la cuenta de la cual se descontará automáticamente la cuota mensualmente e ingresa el monto
+del préstamo. El sistema debe verificar que el cliente no figure en el Veraz (banco de datos con información
+de deudores). Para realizar la comprobación, el sistema envía un código de seguridad para validar la
+identidad de la aplicación del banco. Una vez validada la identidad, la aplicación le envía el nombre y
+apellido de la persona y su número de CUIL/CUIT para determinar si existe o no como deudor. En caso de
+que todo sea válido, el sistema registra el préstamo correspondiente, genera un identificador del préstamo,
+un código de verificación y un comprobante con los datos del préstamo.
+
+El cliente podrá adelantar cuotas a partir del sexto mes de otorgado el préstamo. Para esto, el sistema
+muestra un listado de préstamos vigentes donde se debe seleccionar el que se desea pagar. A continuación
+el sistema solicita ingresar la cantidad de cuotas a abonar. Luego, el sistema muestra un listado de cuentas
+del cliente, donde se deberá seleccionar una de ellas para realizar el pago. Si hay saldo suficiente, el monto
+se deberá descontar de la cuenta del cliente. En caso de no poseer saldo se le informa al cliente.
+
+El cliente podrá realizar la cancelación total del préstamo a partir del noveno mes. Para ello, se debe
+presentar personalmente en el banco con su DNI para acreditar su identidad. Cuando se introduce el DNI, el
+sistema lista los préstamos para que se seleccione cual desea pagar. Luego se verifica que la cuenta
+asociada originalmente posea saldo suficiente para alcanzar el monto total adeudado. De ser así se
+registrará dicha cancelación y emitirá un comprobante con los datos de la operación.
+
+Actores:
+- Cliente
+- Aplicacion del banco 
+
+Casos de uso:
+- Registrar usuario 
+- Iniciar sesion 
+- Cerrar sesion 
+- Solicitar prestamo 
+- Comprobar veraz
+- Adelantar prestamos 
+- Cancelar prestamos 
+
+
+Nombre del caso de uso: Solicitar prestamo
+
+Descripcion: este caso de uso describe el evento en el que un cliente solicita un prestamo via web 
+
+Actores:
+- Cliente 
+
+Precondiciones:
+- El cliente debe tener una sesion iniciada 
+
+Curso normal:
+    Accion del actor:
+    Paso 1: el cliente selecciona la opcion "solicitar prestamo"
+    Paso 3: el cliente ingresa los datos solicitados 
+
+    Accion del sistema:
+    Paso 2: el sistema solicita ingresar el motivo, la cuenta de la cual se descontará automáticamente la cuota mensualmente y 
+    el monto del prestamo 
+    Paso 4: el sistema verifica que el cliente no tenga mas de dos prestamos
+    Paso 5:el sistema verifica que el monto no supere los $30.000
+    Paso 6: el sistema ejecuta el caso de uso "Comprobar veraz"
+    Paso 7: el sistema registra el préstamo correspondiente, genera un identificador del préstamo, 
+    un código de verificación y un comprobante con los datos del préstamo
+
+Curso alterno:
+    Paso alternativo 4: el cliente tiene 3 o mas prestamos. Se informa. Fin de CU
+    Paso alternativo 5: el monto del prestamo supera los $30.000. Se informa. Retoma desde el paso 2 
+    Paso alternativo 6: el cliente figura en el veraz. Se informa. Fin de CU
+
+Postcondicion:
+El sistema registro el prestamo correspondiente, genero un identificador del prestamo, un codigo de verificación y
+un comprobante con los datos del prestamo 
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Nombre del caso de uso: Comprobar veraz 
+
+Descripcion: este caso de uso describe el evento en el que se comprueba si un cliente figura en el veraz 
+
+Actores:
+- Veraz 
+
+Precondiciones:
+Se debe haber ejecutado el CU "Solicitar prestamo" 
+
+Curso normal:
+    Accion del actor:
+    Paso 2: el veraz acepta la conexion y solicita codigo de seguridad 
+    Paso 4: el veraz verifica el codigo y valida la identidad
+    Paso 5: el veraz solicita nombre, apellido y CUIT/CUIL de la persona 
+    Paso 7: el veraz verifica si la persona figura como deudor 
+    Paso 8: el veraz retorna el resultado
+
+    Accion del sistema:
+    Paso 1: el sistema solicita conexion con el veraz 
+    Paso 3: el sistema envia el codigo de seguridad 
+    Paso 6: el sistema envia los datos solicitados 
+    Paso 9: el sistema recibe el resultado y cierra la conexion 
+
+Curso alterno:
+    Paso alternativo 1: falla la conexion con el veraz. Se informa. Fin de CU 
+    Paso alternativo 
+
+Postcondicion:
+Se realizo la comprobación en el veraz 
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Nombre del caso de uso: Adelantar prestamos 
+
+Descripcion: este caso de uso describe el evento en el que un cliente adelanta cuotas de un prestamo 
+
+Actores:
+- Cliente 
+
+Precondiciones:
+El cliente debe tener una sesion iniciada 
+
+Curso normal:
+    Accion del actor:
+    Paso 1: el cliente selecciona la opcion "Adelantar prestamos"
+    Paso 3: el cliente selecciona un prestamo 
+    Paso 5: el cliente ingresa la cantidad de cuotas a abonar
+    Paso 7: el cliente selecciona una de las cuentas 
+
+    Accion del sistema:
+    Paso 2: el sistema muestra los prestamos vigentes del cliente y pide que seleccione uno
+    Paso 4: el sistema solicita ingresar la cantidad de cuotas a abonar 
+    Paso 6: el sistema muestra un listado de cuentas del cliente, donde se deberá seleccionar una de ellas para realizar el pago
+    Paso 8: el sistema verifica que la cuenta posea saldo suficiente 
+    Paso 9: el sistema descuenta el monto de la cuenta, registra el pago e informa exito en la operacion 
+
+Curso alterno:
+    Paso alternativo 2: el cliente no posee prestamos vigentes. Se informa. Fin de CU 
+    Paso alternativo 3: el prestamo fue otorgado hace menos de 6 meses. Se informa. Fin de CU 
+    Paso alternativo 8: la cuenta no posee saldo suficiente. Se informa. Retoma desde el paso 6 
+
+Postcondicion:
+el sistema desconto el monto de la cuenta, registro el pago e informo exito en la operacion
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Nombre del caso de uso: Cancelar prestamos 
+
+Descripcion: este caso de uso describe el evento en el que un cliente cancela un prestamo 
+
+Actores:
+- Cliente 
+
+Precondiciones:
+
+Curso normal:
+    Accion del actor:
+    Paso 1: el cliente selecciona la opcion "cancelar prestamo"
+    Paso 3: el cliente ingresa el DNI
+    Paso 6: el cliente selecciona uno de los prestamos 
+
+    Accion del sistema:
+    Paso 2: el sistema solicita ingresar el DNI 
+    Paso 4: el sistema verifica el DNI 
+    Paso 5: el sistema lista los préstamos para que se seleccione cual desea pagar
+    Paso 7: el sistema verifica que la cuenta asociada originalmente posea saldo suficiente 
+    para alcanzar el monto total adeudado
+    Paso 8: el sistema registra dicha cancelación y emite un comprobante con los datos de la operación
+
+Curso alterno:
+    Paso alternativo 3: el DNI no es valido. Se informa. Retoma desde el paso 2 
+    Paso alternativo 7: la cuenta no posee saldo suficiente. Se informa. Retoma desde el paso 5
+
+Postcondicion:
+el sistema registro la cancelación del prestamo seleccionado y emitio un comprobante con los datos de la operación
